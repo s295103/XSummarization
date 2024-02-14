@@ -1,6 +1,6 @@
 import torch
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
-from utils import use_task_specific_params, trim_batch
+from XSummarization.Comet.utils import use_task_specific_params, trim_batch
 
 
 def chunks(lst, n):

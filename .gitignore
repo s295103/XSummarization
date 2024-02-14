@@ -1,0 +1,8 @@
+.DS_store
+
+Comet/__pycache__
+Tweetsumm/__pycache__
+Tweetsumm/twcs
+__pycache__
+
+*.ipynb
