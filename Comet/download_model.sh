@@ -6,4 +6,5 @@ unzip comet-atomic_2020_BART.zip
 rm -rf ./__MACOSX
 rm -rf ./comet-atomic_2020_BART/.DS_Store
 rm -rf ./comet-atomic_2020_BART/.*swp
+rm -rf ./content/comet-atomic_2020_BART.zip
 

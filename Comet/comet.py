@@ -20,11 +20,11 @@ class Comet:
         self.decoder_start_token_id = None
 
     def generate(
-            self, 
-            queries,
-            decode_method="beam", 
-            num_generate=5, 
-            ):
+        self,
+        queries,
+        decode_method="beam",
+        num_generate=5,
+    ):
 
         with torch.no_grad():
             examples = queries
@@ -32,8 +32,12 @@ class Comet:
             decs = []
             for batch in list(chunks(examples, self.batch_size)):
 
-                batch = self.tokenizer(batch, return_tensors="pt", truncation=True, padding="max_length").to(self.device)
-                input_ids, attention_mask = trim_batch(**batch, pad_token_id=self.tokenizer.pad_token_id)
+                batch = self.tokenizer(
+                    batch, return_tensors="pt", truncation=True, padding="max_length"
+                ).to(self.device)
+                input_ids, attention_mask = trim_batch(
+                    **batch, pad_token_id=self.tokenizer.pad_token_id
+                )
 
                 summaries = self.model.generate(
                     input_ids=input_ids,
@@ -41,12 +45,30 @@ class Comet:
                     decoder_start_token_id=self.decoder_start_token_id,
                     num_beams=num_generate,
                     num_return_sequences=num_generate,
-                    )
+                )
 
-                dec = self.tokenizer.batch_decode(summaries, skip_special_tokens=True, clean_up_tokenization_spaces=False)
+                dec = self.tokenizer.batch_decode(
+                    summaries,
+                    skip_special_tokens=True,
+                    clean_up_tokenization_spaces=False,
+                )
                 decs.append(dec)
 
             return decs
+
+
+def generate_commonsense(comet, utterance, num_generate=5):
+    rels = ["HinderedBy", "xWant", "xIntent", "xNeed", "xReason"]
+    data = {}
+    data["sentence"] = utterance
+    data["speaker"] = utterance.split()[0]
+    for rel in rels:
+        query = f"{utterance} {rel} [GEN]"
+        results = comet.generate(
+            [query], decode_method="beam", num_generate=num_generate
+        )
+        data[rel] = results[0]
+    return data
 
 
 all_relations = [
@@ -101,7 +123,7 @@ all_relations = [
     "xReact",
     "xReason",
     "xWant",
-    ]
+]
 
 if __name__ == "__main__":
 
@@ -117,6 +139,3 @@ if __name__ == "__main__":
     print(queries)
     results = comet.generate(queries, decode_method="beam", num_generate=5)
     print(results)
-
-
-
