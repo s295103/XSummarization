@@ -124,18 +124,3 @@ all_relations = [
     "xReason",
     "xWant",
 ]
-
-if __name__ == "__main__":
-
-    print("model loading ...")
-    comet = Comet("./comet-atomic_2020_BART")
-    comet.model.zero_grad()
-    print("model loaded")
-    queries = []
-    head = "PersonX pleases ___ to make"
-    rel = "xWant"
-    query = "{} {} [GEN]".format(head, rel)
-    queries.append(query)
-    print(queries)
-    results = comet.generate(queries, decode_method="beam", num_generate=5)
-    print(results)
