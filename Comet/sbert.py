@@ -28,4 +28,8 @@ def select_best_commonsense(model, data, debug=False):
         if best_commonsense in data[relation]:
             best_relation = relation
             break
-    return best_commonsense, best_relation
+    return {
+        "sentence":utterance,
+        "relation":best_relation,
+        "commonsense":best_commonsense
+    }
